@@ -25,6 +25,8 @@ import java.io.IOException;
 import java.text.AttributedString;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.NoSuchElementException;
+
 @Component
 @Log4j
 @Service
@@ -50,22 +52,29 @@ public class ImageProcessing {
 
     //TODO: обнулить все переменные перед вызовом
     public byte[] processImage() throws IOException {
+
         // Создаем объект PageRequest для запроса одной страницы с одной записью (последней)
         PageRequest pageRequest = PageRequest.of(0, 1, Sort.by(Sort.Direction.DESC, "id"));
-        Long id = appPhotoDAO.findAll(pageRequest).stream().findFirst().get().getId();
-        this.text = memTextDAO.findById(RandomRange.rnd()).get().getText_data();
-        image = ByteArrayToImage(binaryContentDAO.findById(id).get().getPhotoAsArrayOfBytesOriginal());
-        graphics = image.getGraphics();
-        adaptatingFont();
-        drawText();
-        return saveImage(id);
+        if(memTextDAO.findById(RandomRange.rnd()).isPresent() &&
+                appPhotoDAO.findAll(pageRequest).stream().findFirst().isPresent()) {
+            Long id = appPhotoDAO.findAll(pageRequest).stream().findFirst().get().getId();
+            this.text = memTextDAO.findById(RandomRange.rnd()).get().getText_data();
+            if (binaryContentDAO.findById(id).isPresent())
+                image = ByteArrayToImage(binaryContentDAO.findById(id).get().getPhotoAsArrayOfBytesOriginal());
+            else
+                throw new NoSuchElementException();
+            graphics = image.getGraphics();
+            adaptatingFont();
+            drawText();
+            return saveImage(id);
+        } else {
+            throw new NoSuchElementException();
+        }
     }
 
     public BufferedImage ByteArrayToImage (byte[] byteArrayImage) throws IOException {
         ByteArrayInputStream bis = new ByteArrayInputStream(byteArrayImage);
         BufferedImage bImage2 = ImageIO.read(bis);
-        //ImageIO.write(bImage2, "jpg", new File("/Users/abalonef/Desktop/imageFromTg.jpg"));
-        //System.out.println("image created");
         return bImage2;
     }
 
@@ -73,6 +82,15 @@ public class ImageProcessing {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ImageIO.write(image, "jpeg", baos);
         return baos.toByteArray();
+    }
+
+    private void resetFields(){
+        image = null;
+        attributedText = null;
+        graphics = null;
+        text = null;
+        listOfString.clear();
+        countStr = 0;
     }
 
     private void adaptatingFont(){
@@ -135,6 +153,7 @@ public class ImageProcessing {
 
         // Сохраняем обновленный объект в базе данных
         binaryContentDAO.save(entity);
+        resetFields();
         return binarNewImage;
     }
 }

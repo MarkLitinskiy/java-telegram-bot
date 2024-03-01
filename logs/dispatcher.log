@@ -21,3 +21,11 @@
 2024-02-26 20:51:02 DEBUG TelegramBot:57 - Ggg
 2024-02-26 20:56:10 DEBUG TelegramBot:57 - 
 2024-02-26 20:57:30 DEBUG TelegramBot:57 - 
+2024-02-27 15:06:51 DEBUG TelegramBot:57 - 
+2024-02-27 15:17:19 DEBUG TelegramBot:57 - 
+2024-02-27 15:17:19 ERROR MainServiceImpl:41 - java.lang.IndexOutOfBoundsException: Index 3 out of bounds for length 2
+2024-02-27 15:17:49 DEBUG TelegramBot:57 - 
+2024-02-27 15:17:49 ERROR MainServiceImpl:41 - java.lang.IndexOutOfBoundsException: Index 3 out of bounds for length 2
+2024-02-27 15:22:04 DEBUG TelegramBot:57 - 
+2024-02-27 15:22:13 DEBUG TelegramBot:57 - 
+2024-02-27 15:24:30 DEBUG TelegramBot:57 - 

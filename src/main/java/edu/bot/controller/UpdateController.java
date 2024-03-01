@@ -23,10 +23,8 @@ import static edu.bot.utils.MessageUtils.generateSendPhotoWithText;
 public class UpdateController {
     private TelegramBot telegramBot;
     private MessageUtils messageUtils;
-
     @Autowired
     private ImageProcessing imageProcessing;
-
     @Autowired
     private MainServiceImpl mainService;
 
